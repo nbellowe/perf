@@ -96,6 +96,7 @@ applyFilter(struct Filter *filter, cs1300bmp *input, cs1300bmp *output)
     cycStart = rdtscll();
 
     int cache_filter[3][3];
+    #pragma omp parallel for
     for(int i = 0; i < 3; i++){
         for(int j = 0; j < 3; j++){
             cache_filter[i][j] =  filter -> get(i,j);
@@ -105,7 +106,7 @@ applyFilter(struct Filter *filter, cs1300bmp *input, cs1300bmp *output)
     int row_size = input -> height - 1;
     int col_size = input -> width  - 1;
     int filter_divisor = filter -> getDivisor();
-
+    #pragma omp parallel for
     for(int plane = 2; plane >= 0 ; plane-- ) { //best place for multicore performance benefits.
         for(int row = row_size; row > 0; row-- ) {
             for(int col = col_size; col > 0; col-- ) {
