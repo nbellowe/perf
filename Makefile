@@ -12,17 +12,17 @@ filter: FilterMain.cpp Filter.cpp cs1300bmp.cc
 ##
 ## Parameters for the test run
 ##
-FILTERS = filters/gauss.filter filters/vline.filter filters/hline.filter filters/emboss.filter
-IMAGES = pics/boats.bmp pics/blocks-small.bmp
+FILTERS = gauss.filter vline.filter hline.filter emboss.filter
+IMAGES = boats.bmp blocks-small.bmp
 TRIALS = 1 2 3 4
 
 judge: filter
-	-./Judge -p ./filter -i pics/boats.bmp
-	-./Judge -p ./filter -i pics/blocks-small.bmp
+	-./Judge -p ./filter -i boats.bmp
+	-./Judge -p ./filter -i blocks-small.bmp
 
 clean:
 	-rm filter
 	-rm filtered-*.bmp
 
 valgrind: filter
-	-valgrind --tool=callgrind --simulate-cache=yes --collect-jumps=yes ./filter filters/gauss.filter pics/blocks-small.bmp
+	-valgrind --tool=callgrind --simulate-cache=yes --collect-jumps=yes ./filter gauss.filter blocks-small.bmp
