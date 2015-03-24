@@ -1,0 +1,4 @@
+filter
+filtered-*.bmp
+.DS_Store
+filter.dSYM/
