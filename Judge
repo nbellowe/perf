@@ -13,10 +13,10 @@
 #
 use Getopt::Long;
 
-$image = "blocks-small.bmp";
+$image = "pics/blocks-small.bmp";
 $program = "./filter";
 $samples = 12;
-$verbose = 1;
+$verbose = "";
 $label = "";
 
 $result = GetOptions("program|p=s" => \$program,
