@@ -108,20 +108,20 @@ applyFilter(struct Filter *filter, cs1300bmp *input, cs1300bmp *output)
     int filter_divisor = filter -> getDivisor();
     #pragma omp parallel for
     for(int plane = 2; plane >= 0 ; --plane ) { //best place for multicore performance benefits.
-        for(int row = row_size; row > 0; --row ) {
-            for(int col = col_size; col > 0; --col ) {
+        for(int row = row_size, row_one = row+1, row_two=row+2; row > 0; --row, row_two=row_one-- ) {
+            for(int col = col_size, col_one = col_size+1, col_two = col_size+2; col > 0; --col, col_two=col_one-- ) {
                 int new_pixel;
                 new_pixel  = input -> color[plane][row    ][col    ] * cache_filter[0][0];
-                new_pixel += input -> color[plane][row    ][col + 1] * cache_filter[0][1];
-                new_pixel += input -> color[plane][row    ][col + 2] * cache_filter[0][2];
-                new_pixel += input -> color[plane][row + 1][col    ] * cache_filter[1][0];
-                new_pixel += input -> color[plane][row + 1][col + 1] * cache_filter[1][1];
-                new_pixel += input -> color[plane][row + 1][col + 2] * cache_filter[1][2];
-                new_pixel += input -> color[plane][row + 2][col    ] * cache_filter[2][0];
-                new_pixel += input -> color[plane][row + 2][col + 1] * cache_filter[2][1];
-                new_pixel += input -> color[plane][row + 2][col + 2] * cache_filter[2][2];
+                new_pixel += input -> color[plane][row    ][col_one] * cache_filter[0][1];
+                new_pixel += input -> color[plane][row    ][col_two] * cache_filter[0][2];
+                new_pixel += input -> color[plane][row_one][col    ] * cache_filter[1][0];
+                new_pixel += input -> color[plane][row_one][col_one] * cache_filter[1][1];
+                new_pixel += input -> color[plane][row_one][col_two] * cache_filter[1][2];
+                new_pixel += input -> color[plane][row_one][col    ] * cache_filter[2][0];
+                new_pixel += input -> color[plane][row_one][col_one] * cache_filter[2][1];
+                new_pixel += input -> color[plane][row_one][col_two] * cache_filter[2][2];
 
-                new_pixel = new_pixel / filter_divisor;
+                new_pixel /= filter_divisor;
 
                 new_pixel = new_pixel < 0   ? 0   : new_pixel;
                 new_pixel = new_pixel > 255 ? 255 : new_pixel;
