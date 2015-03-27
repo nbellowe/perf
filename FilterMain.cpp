@@ -103,8 +103,10 @@ applyFilter(struct Filter *filter, cs1300bmp *input, cs1300bmp *output)
         }
     }*/
 
-    short row_size = input -> height - 1;
-    short col_size = input -> width  - 1;
+    short in_height = input -> height;
+    short in_width  = input -> width;
+    short row_size = in_height - 1;
+    short col_size = in_width  - 1;
     short filter_divisor = filter -> getDivisor();
     #pragma omp parallel for
     for(short plane = 2; plane >= 0 ; --plane ) { //best place for multicore performance benefits.
@@ -130,8 +132,8 @@ applyFilter(struct Filter *filter, cs1300bmp *input, cs1300bmp *output)
         }
     }
 
-    output -> width = input -> width;
-    output -> height = input -> height;
+    output -> width = in_width;
+    output -> height = in_height;
 
     cycStop = rdtscll();
     double diff = cycStop - cycStart;
