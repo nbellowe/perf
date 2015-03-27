@@ -19,15 +19,15 @@ struct cs1300bmp {
   //
   // Actual width used by this image
   //
-  int width;
+  unsigned short width;
   //
   // Actual height used by this image
   //
-  int height;
+  unsigned short height;
   //
   // R/G/B fields
-  // 
-  int color[MAX_COLORS][MAX_DIM][MAX_DIM];
+  //
+  unsigned char color[MAX_COLORS][MAX_DIM][MAX_DIM];
 };
 
 //

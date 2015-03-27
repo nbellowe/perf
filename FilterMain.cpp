@@ -103,13 +103,13 @@ applyFilter(struct Filter *filter, cs1300bmp *input, cs1300bmp *output)
         }
     }*/
 
-    int row_size = input -> height - 1;
-    int col_size = input -> width  - 1;
-    int filter_divisor = filter -> getDivisor();
+    short row_size = input -> height - 1;
+    short col_size = input -> width  - 1;
+    short filter_divisor = filter -> getDivisor();
     #pragma omp parallel for
-    for(int plane = 2; plane >= 0 ; --plane ) { //best place for multicore performance benefits.
-        for(int row = row_size, row_one = row+1, row_two=row+2; row > 0; --row, row_two=row_one-- ) {
-            for(int col = col_size, col_one = col_size+1, col_two = col_size+2; col > 0; --col, col_two=col_one-- ) {
+    for(short plane = 2; plane >= 0 ; --plane ) { //best place for multicore performance benefits.
+        for(short row = row_size, row_one = row+1, row_two=row+2; row > 0; --row, row_two=row_one-- ) {
+            for(short col = col_size, col_one = col_size+1, col_two = col_size+2; col > 0; --col, col_two=col_one-- ) {
                 int new_pixel;
                 new_pixel  = input -> color[plane][row    ][col    ] * cache_filter[0];
                 new_pixel += input -> color[plane][row    ][col_one] * cache_filter[1];
