@@ -7,11 +7,12 @@ using namespace std;
 class Filter {
   int divisor;
   int dim;
-  int *data;
 
 public:
+  char* data;
+
   Filter(int _dim);
-  int get(int r, int c);
+  int get(int i);
   void set(int r, int c, int value);
 
   int getDivisor();
