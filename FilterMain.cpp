@@ -124,9 +124,8 @@ applyFilter(struct Filter *filter, cs1300bmp *input, cs1300bmp *output)
                 new_pixel /= filter_divisor;
 
                 new_pixel = new_pixel < 0   ? 0   : new_pixel;
-                new_pixel = new_pixel > 255 ? 255 : new_pixel;
+                output -> color[plane][row][col] = new_pixel > 255 ? 255 : new_pixel;
 
-                output -> color[plane][row][col] = new_pixel;
             }
         }
     }
