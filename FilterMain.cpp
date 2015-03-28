@@ -96,6 +96,8 @@ applyFilter(struct Filter *_filter, cs1300bmp *input, cs1300bmp *output)
     cycStart = rdtscll();
 
     char *filter = _filter -> data;
+    auto colors = input -> color;
+
     /*#pragma omp parallel for
     for(int i = 0; i < 3; i++){
         for(int j = 0; j < 3; j++){
@@ -103,27 +105,29 @@ applyFilter(struct Filter *_filter, cs1300bmp *input, cs1300bmp *output)
         }
     }*/
 
-    short in_height = input -> height;
-    short in_width  = input -> width;
-    short row_size = in_height - 1;
-    short col_size = in_width  - 1;
-    short filter_divisor = _filter -> getDivisor();
+    const short in_height = input -> height;
+    const short row_size = in_height - 1;
+
+    const short in_width  = input -> width;
+    const short col_size = in_width  - 1;
+
+    const short filter_divisor = _filter -> getDivisor();
 
     #pragma omp parallel for
     for(short plane = 2; plane >= 0 ; --plane ) { //best place for multicore performance benefits.
         for(short row = row_size, row_one = row+1, row_two=row+2; row > 0; --row, row_two=row_one-- ) {
             for(short col = col_size, col_one = col_size+1, col_two = col_size+2; col > 0; --col, col_two=col_one-- ) {
 
-                int new_pixel;
-                new_pixel  = input -> color[plane][row    ][col    ] * filter[0];
-                new_pixel += input -> color[plane][row    ][col_one] * filter[1];
-                new_pixel += input -> color[plane][row    ][col_two] * filter[2];
-                new_pixel += input -> color[plane][row_one][col    ] * filter[3];
-                new_pixel += input -> color[plane][row_one][col_one] * filter[4];
-                new_pixel += input -> color[plane][row_one][col_two] * filter[5];
-                new_pixel += input -> color[plane][row_two][col    ] * filter[6];
-                new_pixel += input -> color[plane][row_two][col_one] * filter[7];
-                new_pixel += input -> color[plane][row_two][col_two] * filter[8];
+                short new_pixel;
+                new_pixel  = colors[plane][row    ][col    ] * filter[0];
+                new_pixel += colors[plane][row    ][col_one] * filter[1];
+                new_pixel += colors[plane][row    ][col_two] * filter[2];
+                new_pixel += colors[plane][row_one][col    ] * filter[3];
+                new_pixel += colors[plane][row_one][col_one] * filter[4];
+                new_pixel += colors[plane][row_one][col_two] * filter[5];
+                new_pixel += colors[plane][row_two][col    ] * filter[6];
+                new_pixel += colors[plane][row_two][col_one] * filter[7];
+                new_pixel += colors[plane][row_two][col_two] * filter[8];
 
                 new_pixel /= filter_divisor;
 

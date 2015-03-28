@@ -2,7 +2,7 @@ CXX	=g++
 ##
 ## Use our standard compiler flags for the course...
 ##
-CXXFLAGS= -m32 -g -funroll-loops -fno-omit-frame-pointer -O3 -fopenmp
+CXXFLAGS= -std=c++11 -m32 -g -funroll-loops -fno-omit-frame-pointer -O3 -fopenmp
 
 goals: judge
 	echo "Done"
