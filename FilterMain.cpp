@@ -113,8 +113,8 @@ applyFilter(struct Filter *_filter, cs1300bmp *input, cs1300bmp *output)
     for(short plane = 2; plane >= 0 ; --plane ) { //best place for multicore performance benefits.
         for(short row = row_size, row_one = row+1, row_two=row+2; row > 0; --row, row_two=row_one-- ) {
             for(short col = col_size, col_one = col_size+1, col_two = col_size+2; col > 0; --col, col_two=col_one-- ) {
-
-                int new_pixel;
+                short new_pixel;
+                
                 new_pixel  = input -> color[plane][row    ][col    ] * filter[0];
                 new_pixel += input -> color[plane][row    ][col_one] * filter[1];
                 new_pixel += input -> color[plane][row    ][col_two] * filter[2];
@@ -127,9 +127,7 @@ applyFilter(struct Filter *_filter, cs1300bmp *input, cs1300bmp *output)
 
                 new_pixel /= filter_divisor;
 
-                new_pixel = new_pixel < 0   ? 0   : new_pixel;
-                output -> color[plane][row][col] = new_pixel > 255 ? 255 : new_pixel;
-
+                output -> color[plane][row][col] = new_pixel < 0   ? 0   : (new_pixel > 255 ? 255 : new_pixel);
             }
         }
     }
